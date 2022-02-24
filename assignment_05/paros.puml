@@ -1,22 +1,121 @@
 @startuml Paros
+
+' clear
 class Paros {
-    - {static} Log log
-    + {static} void main()
+    + {static} void main(String[] args)
     - void init(String[] args)
     - void run()
+    - void runCommandLine()
+    - void runGUI()
+    - void showLicense()
+    - void checkUpdate()
 }
+Paros ..> Constant
+Paros ..> Model
+Paros ..> View
+Paros ..> Control
 
-
+' clear
 class Constant {
-    + {static} String PROGRAM_NAME
-    + {static} String PROGRAM_VERSION
-    + {static} long VERSION_TAG
+    {static} + String PROGRAM_NAME
+    {static} + String PROGRAM_VERSION
+    {static}+ String USER_AGENT
+    {static} + String PROGRAM_TITLE
+    + String ACCEPTED_LICENSE
 
-    + {static} String getEyeCatcher()
-    + {static} void setEyeCatcher(String eyeCatcher)
-    + {static} void setSP(boolean isSP) 
+    {static} + Constant getInstance()
+    {static} + boolean isWindows() 
 }
 
+' clear
+class Model {
+    {static} - Model model
+    - Session sessio
+    - OptionsParam optionsParam
+    - Database db
+
+    {static} + Model getSingleton()
+    + void init()
+    + OptionsParam getOptionsParam()
+    + Session getSession()
+    + void setSession(Session paramSession) 
+}
+Model *-- OptionsParam
+Model *-- Session
+Model ..> Constant
+Model ..> Database
+
+' clear
+class View {
+    {static} + View getSingleton()
+    + void postInit()
+    + MainFrame getMainFrame()
+    + void setStatus(String msg) 
+}
+class View implements ViewDelegate
+View ..> Constant
+
+' clear
+class Control {
+    {static} - Control control
+    - Proxy proxy
+    - MenuFileControl menuFileControl
+    - MenuToolsControl menuToolsControl
+
+    {static} + void initSingletonWithView()
+    {static} + Control getSingleton()
+    + void runCommandLineNewSession(String fileName)
+    + void shutdown(boolean compact)
+    + MenuFileControl getMenuFileControl()
+    + MenuToolsControl getMenuToolsControl()
+}
+class Control extends AbstractControl
+Control *-- Session
+Control *-- Proxy
+Control *-- MenuFileControl
+Control *-- MenuToolsControl
+Control ..> Model
+Control ..> View
+
+' clear
+abstract class AbstractControl {
+    - Model model
+    - View view
+
+    + ExtensionLoader getExtensionLoader()
+}
+AbstractControl ..> Model
+AbstractControl ..> View
+
+' clear
+class OptionsParam {
+    + void setGUI(boolean gui)
+    + boolean isGUI()
+    + ProxyParam getProxyParam()
+    + void setProxyParam(ProxyParam proxyParam)
+}
+class OptionsParam extends AbstractParam
+OptionsParam *-- ProxyParam
+
+' clear
+class Database {
+    {static} - Database database
+    {static} + Database getSingleton()
+    - void setDatabaseServer(DatabaseServer databaseServer)
+    + DatabaseServer getDatabaseServer()
+}
+
+' clear
+class Session {
+    - Model model
+    - String fileName
+    - String sessionDesc
+    + void save(final String fileName, final SessionListener callback)
+}
+class Session extends FileXML
+Session ..> Constant
+
+' clear
 class FileXML {
     # Document doc
     # DocumentBuilder docBuilder
@@ -27,6 +126,7 @@ class FileXML {
     + Element getElement(String tag)
 }
 
+' clear
 class AbstractParam {
     - FileConfiguration config
 
@@ -35,36 +135,7 @@ class AbstractParam {
     + FileConfiguration getConfig()
 }
 
-class Database {
-    - {static} Database database
-	- DatabaseServer databaseServer
-	- TableHistory tableHistory
-
-	+ DatabaseServer getDatabaseServer()
-    - void setDatabaseServer(DatabaseServer databaseServer)
-    - void setTableHistory(TableHistory tableHistory)
-}
-
-class Control {
-    - {static} Log log
-    - {static} Control control
-    - Proxy proxy
-
-    - void init()
-    + Proxy getProxy()
-    # void addExtension()
-}
-
-abstract class AbstractControl {
-    - ExtensionLoader loader
-    - Model model
-    - View view
-
-    + ExtensionLoader getExtensionLoader()
-    - void loadExtension()
-    # {abstract} void addExtension()
-}
-
+' clear
 class Proxy {
     - Model model
 	- ProxyServer proxyServer
@@ -74,9 +145,12 @@ class Proxy {
     + void stopServer() 
     + void setSerialize(boolean serialize)
 }
+Proxy ..> Model
+Proxy *-- ProxyServer
+Proxy *-- ProxyServerSSL
 
+' clear
 class MenuFileControl {
-    - {static} Log log 
     - View view
     - Model model
 
@@ -84,7 +158,9 @@ class MenuFileControl {
     + void newSession(boolean isPromptNewSession)
     + void openSession()
 }
+MenuFileControl *-- Session
 
+' clear
 class MenuToolsControl {
     - View view
 	- Model model
@@ -93,6 +169,7 @@ class MenuToolsControl {
     + void options()
 }
 
+' clear
 interface ViewDelegate {
     + MainFrame getMainFrame()    
     + SiteMapPanel getSiteTreePanel()    
@@ -108,33 +185,60 @@ interface ViewDelegate {
     + HttpPanel getResponsePanel()
 }
 
-class Model {
-    - {static} Model model
-    - {static} String DBNAME_TEMPLATE
-    - String DBNAME_UNTITLED
-
-    + OptionsParam getOptionsParam()
-    + void setOptionsParam(OptionsParam param)
-    + Session getSession()
+' clear
+class HttpUtil {
+    + {static} String encodeURI(String uri)
+    + {static} void sleep(int ms)
+    + {static} void closeServerSocket(ServerSocket socket)
 }
 
-class Session {
-    - {static} String ROOT
-	- {static} String SESSION_DESC
-	- {static} String SESSION_ID
+' clear
+class ProxyServer {
+    # boolean isProxyRunning
+    # ProxyParam proxyParam
+    # boolean serialize
 
-    + void discard()
-    + String getSessionDesc()
-	+ long getSessionId()
+    + void run()
+    # ProxyThread createProxyProcess(Socket clientSocket)
+    + boolean isAnyProxyThreadRunning()
+}
+ProxyServer *-- ProxyParam
+ProxyServer *-- ProxyThread
+ProxyServer ..> HttpUtil
+
+' clear
+class ProxyServerSSL {
+    - {static} SSLConnector ssl
+    # ServerSocket createServerSocket(String ip, int port)
+    # ProxyThread createProxyProcess(Socket clientSocket)
+}
+class ProxyServerSSL extends ProxyServer
+ProxyServerSSL *-- ProxyThread
+
+' clear
+class ProxyParam {
+    - String proxyIp
+    - int proxyPort 
+    - int proxySSLPort 
+    - int useReverseProxy 
+
+    # void parse()
+    + String getProxyIp()
+    + void setProxyIp(String proxyIp)
+    + int getProxyPort()
+}
+class ProxyParam extends AbstractParam
+
+' clear
+class ProxyThread {
+    # ProxyServer parentServer
+    # ProxyParam proxyParam
+    # ProxyThread originProcess
+
+    + void start()
+    - void beginSSL()
+    + void run()
+    # void processHttp(HttpRequestHeader requestHeader, boolean isSecure)
 }
 
-class OptionsParam {
-	+ ProxyParam proxyParam
-	+ ConnectionParam connectionParam
-	+ OptionsParamView viewParam
-
-    + ConnectionParam getConnectionParam()
-	+ ProxyParam getProxyParam()
-	+ void setProxyParam(ProxyParam proxyParam)
-}
 @enduml
