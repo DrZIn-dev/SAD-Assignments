@@ -1,0 +1,140 @@
+@startuml Paros
+class Paros {
+    - {static} Log log
+    + {static} void main()
+    - void init(String[] args)
+    - void run()
+}
+
+
+class Constant {
+    + {static} String PROGRAM_NAME
+    + {static} String PROGRAM_VERSION
+    + {static} long VERSION_TAG
+
+    + {static} String getEyeCatcher()
+    + {static} void setEyeCatcher(String eyeCatcher)
+    + {static} void setSP(boolean isSP) 
+}
+
+class FileXML {
+    # Document doc
+    # DocumentBuilder docBuilder
+    # DocumentBuilderFactory docBuilderFactory
+
+    + Document getDocument()
+    + Element getElement(Element base, String childTag)
+    + Element getElement(String tag)
+}
+
+class AbstractParam {
+    - FileConfiguration config
+
+    + void load(FileConfiguration config)
+    + void load(String fileName)
+    + FileConfiguration getConfig()
+}
+
+class Database {
+    - {static} Database database
+	- DatabaseServer databaseServer
+	- TableHistory tableHistory
+
+	+ DatabaseServer getDatabaseServer()
+    - void setDatabaseServer(DatabaseServer databaseServer)
+    - void setTableHistory(TableHistory tableHistory)
+}
+
+class Control {
+    - {static} Log log
+    - {static} Control control
+    - Proxy proxy
+
+    - void init()
+    + Proxy getProxy()
+    # void addExtension()
+}
+
+abstract class AbstractControl {
+    - ExtensionLoader loader
+    - Model model
+    - View view
+
+    + ExtensionLoader getExtensionLoader()
+    - void loadExtension()
+    # {abstract} void addExtension()
+}
+
+class Proxy {
+    - Model model
+	- ProxyServer proxyServer
+	- ProxyServerSSL proxyServerSSL
+
+    + void startServer()
+    + void stopServer() 
+    + void setSerialize(boolean serialize)
+}
+
+class MenuFileControl {
+    - {static} Log log 
+    - View view
+    - Model model
+
+    + void exit() 
+    + void newSession(boolean isPromptNewSession)
+    + void openSession()
+}
+
+class MenuToolsControl {
+    - View view
+	- Model model
+	- Control control
+
+    + void options()
+}
+
+interface ViewDelegate {
+    + MainFrame getMainFrame()    
+    + SiteMapPanel getSiteTreePanel()    
+    + OutputPanel getOutputPanel()    
+    + int showConfirmDialog(String msg)
+    + int showYesNoCancelDialog(String msg)    
+    + void showWarningDialog(String msg)    
+    + void showMessageDialog(String msg)    
+    + WaitMessageDialog getWaitMessageDialog(String msg)    
+    + MainPopupMenu getPopupMenu()    
+    + void setStatus(String msg)    
+    + HttpPanel getRequestPanel()    
+    + HttpPanel getResponsePanel()
+}
+
+class Model {
+    - {static} Model model
+    - {static} String DBNAME_TEMPLATE
+    - String DBNAME_UNTITLED
+
+    + OptionsParam getOptionsParam()
+    + void setOptionsParam(OptionsParam param)
+    + Session getSession()
+}
+
+class Session {
+    - {static} String ROOT
+	- {static} String SESSION_DESC
+	- {static} String SESSION_ID
+
+    + void discard()
+    + String getSessionDesc()
+	+ long getSessionId()
+}
+
+class OptionsParam {
+	+ ProxyParam proxyParam
+	+ ConnectionParam connectionParam
+	+ OptionsParamView viewParam
+
+    + ConnectionParam getConnectionParam()
+	+ ProxyParam getProxyParam()
+	+ void setProxyParam(ProxyParam proxyParam)
+}
+@enduml
