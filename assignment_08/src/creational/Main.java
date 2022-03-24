@@ -32,7 +32,7 @@ public class Main {
         csvBookMetadataExporter.add(TestData.GoFBook);
         csvBookMetadataExporter.export(System.out);
 
-        // CSVBookMetadataExporter
+        // XMLBookMetadataExporter
         BookMetadataExporter xmlBookMetadataExporter = new XMLBookMetadataExporter();
         xmlBookMetadataExporter.add(TestData.sailboatBook);
         xmlBookMetadataExporter.add(TestData.GoFBook);
