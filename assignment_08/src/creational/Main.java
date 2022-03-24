@@ -20,10 +20,22 @@ public class Main {
             e.printStackTrace();
         }
 
-//        // Expected usage
-//        BookMetadataExporter exporter = new XMLBookMetadataExporter();
-//        exporter.add(TestData.sailboatBook);
-//        exporter.add(TestData.GoFBook);
-//        exporter.export(System.out);
+        // JSONBookMetadataExporter
+        BookMetadataExporter exporter = new JSONBookMetadataExporter();
+        exporter.add(TestData.sailboatBook);
+        exporter.add(TestData.GoFBook);
+        exporter.export(System.out);
+
+        // CSVBookMetadataExporter
+        BookMetadataExporter csvBookMetadataExporter = new CSVBookMetadataExporter();
+        csvBookMetadataExporter.add(TestData.sailboatBook);
+        csvBookMetadataExporter.add(TestData.GoFBook);
+        csvBookMetadataExporter.export(System.out);
+
+        // CSVBookMetadataExporter
+        BookMetadataExporter xmlBookMetadataExporter = new XMLBookMetadataExporter();
+        xmlBookMetadataExporter.add(TestData.sailboatBook);
+        xmlBookMetadataExporter.add(TestData.GoFBook);
+        xmlBookMetadataExporter.export(System.out);
     }
 }
