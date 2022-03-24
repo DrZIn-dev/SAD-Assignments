@@ -10,7 +10,7 @@ public class Main {
         // Current usage
         BookMetadataFormatter formatter = null;
         try {
-            formatter = BookMetadataFormatterFactory.getBookMetadataFormatter(BookMetadataFormatterFactory.Format.CSV);
+            formatter = BookMetadataFormatterFactory.getBookMetadataFormatter(BookMetadataFormatterFactory.Format.JSON);
             formatter.append(TestData.dragonBook);
             formatter.append(TestData.dinosaurBook);
             System.out.print(formatter.getMetadataString());
@@ -20,7 +20,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Expected usage
+//        // Expected usage
 //        BookMetadataExporter exporter = new XMLBookMetadataExporter();
 //        exporter.add(TestData.sailboatBook);
 //        exporter.add(TestData.GoFBook);
