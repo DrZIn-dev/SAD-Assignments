@@ -2,8 +2,8 @@
 package structural;
 
 public abstract class HealthcareWorker implements HealthcareServiceable {
-    private String name;
-    private double price;
+    private final String name;
+    private final double price;
 
     public HealthcareWorker(String name, double price) {
         this.name = name;

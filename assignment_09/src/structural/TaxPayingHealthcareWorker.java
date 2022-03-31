@@ -1,6 +1,6 @@
 package structural;
 
-public class TaxPayingHealthcareWorker extends HealthcareWorkerDecorator{
+public class TaxPayingHealthcareWorker extends HealthcareWorkerDecorator {
     public TaxPayingHealthcareWorker(HealthcareWorker worker) {
         super(worker);
         System.out.println("Decorate " + worker.getName() + " with TaxPaying");
@@ -8,6 +8,6 @@ public class TaxPayingHealthcareWorker extends HealthcareWorkerDecorator{
 
     @Override
     public double getPrice() {
-        return 1.1 * super.getPrice();
+        return super.getPrice() * 1.1;
     }
 }

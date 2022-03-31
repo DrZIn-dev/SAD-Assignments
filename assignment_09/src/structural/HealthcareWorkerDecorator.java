@@ -1,7 +1,7 @@
 package structural;
 
-public abstract class HealthcareWorkerDecorator extends HealthcareWorker{
-    private HealthcareWorker worker;
+public abstract class HealthcareWorkerDecorator extends HealthcareWorker {
+    private final HealthcareWorker worker;
 
     public HealthcareWorkerDecorator(HealthcareWorker worker) {
         super(worker);

@@ -2,7 +2,7 @@ package structural;
 
 import java.util.Date;
 
-public class TimeLoggingHealthcareWorker extends HealthcareWorkerDecorator{
+public class TimeLoggingHealthcareWorker extends HealthcareWorkerDecorator {
     public TimeLoggingHealthcareWorker(HealthcareWorker worker) {
         super(worker);
         System.out.println("Decorate " + worker.getName() + " with TimeLogging");
@@ -10,7 +10,7 @@ public class TimeLoggingHealthcareWorker extends HealthcareWorkerDecorator{
 
     @Override
     public void service() {
-        System.out.print(new Date()+": ");
+        System.out.print(new Date() + ": ");
         super.service();
     }
 }

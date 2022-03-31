@@ -7,7 +7,6 @@ public class Anesthesiologist extends HealthcareWorker {
 
     @Override
     public void service() {
-        System.out.println(this.getName() + " takes care of the total perioperative care of patients" +
-                " before, during and after surgery.");
+        System.out.println(this.getName() + " takes care of the total perioperative care of patients" + " before, during and after surgery.");
     }
 }
