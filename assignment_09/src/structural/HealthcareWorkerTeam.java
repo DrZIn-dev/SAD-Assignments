@@ -1,13 +1,13 @@
 package structural;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class HealthcareWorkerTeam implements HealthcareServiceable {
     private final Set<HealthcareServiceable> members;
 
     HealthcareWorkerTeam() {
-        members = new HashSet<HealthcareServiceable>();
+        members = new LinkedHashSet<HealthcareServiceable>();
     }
 
     public void addMember(HealthcareServiceable member) {
@@ -19,9 +19,7 @@ public class HealthcareWorkerTeam implements HealthcareServiceable {
     }
 
     public void service() {
-        for (HealthcareServiceable member : members) {
-            member.service();
-        }
+        members.stream().forEach(member -> member.service());
     }
 
     public double getPrice() {
