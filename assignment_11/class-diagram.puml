@@ -1,0 +1,70 @@
+@startuml
+class Main {
+    + Main()
+    + main() : void
+}
+Main ..> People : <<create>>
+Main ..> Person : <<create>>
+Main ..> WeightStrategy : <<create>>
+Main ..> AgeSortStrategy : <<create>>
+Main ..> HeightSortStrategy : <<create>>
+
+class Person {
+    - age : Integer
+    - height : Integer
+    - name : String
+    - weight : Integer
+
+    + Person()
+    + <<get/set>> name() : String
+    + <<get/set>> height() : Integer
+    + <<get/set>> weight() : Integer
+    + <<get/set>> age() : Integer
+}
+
+class People {
+ - sortStrategy : SortStrategy
+ - members : List<Person>
+
+ + People()
+ + addMember(p : Person) : void
+ + print(out : PrintStream) : void
+ + setSortStrategy(sortStrategy : SortStrategy) : void
+}
+People *--> SortStrategy
+People ..> SortStrategy
+People ..> Person
+People *--> Person
+People ..> NameSortStrategy :  "<<create>>"
+
+
+
+interface SortStrategy {
+    + customSort(people : List<Person>) : void
+}
+SortStrategy ..> Person
+
+class NameSortStrategy {
+    + customSort(people : List<Person>) : void
+}
+class NameSortStrategy implements SortStrategy
+NameSortStrategy ..> Person
+
+class WeightStrategy {
+    + customSort(people : List<Person>) : void
+}
+class WeightStrategy implements SortStrategy
+WeightStrategy ..> Person
+
+class HeightSortStrategy {
+    + customSort(people : List<Person>) : void
+}
+class HeightSortStrategy implements SortStrategy
+HeightSortStrategy ..> Person
+
+class AgeSortStrategy {
+    + customSort(people : List<Person>) : void
+}
+class AgeSortStrategy implements SortStrategy
+AgeSortStrategy ..> Person
+@enduml
